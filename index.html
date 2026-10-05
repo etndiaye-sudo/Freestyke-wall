@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Freestyle Wall</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Work+Sans:wght@400;600&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#d8d4cb;--ink:#1b1b24;--paper:#efece5;--blue:#2338ff;--yellow:#ffd23f;--mute:#6a665e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#26242c;--ink:#ece8df;--paper:#37333f;--mute:#a9a4b3}}
+:root[data-theme="dark"]{--bg:#26242c;--ink:#ece8df;--paper:#37333f;--mute:#a9a4b3}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Work Sans",system-ui,sans-serif;min-height:100vh}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font:2.2rem/1 "Bowlby One",Impact,sans-serif;margin:8px 0 4px;letter-spacing:.5px}
+.sub{color:var(--mute);margin:0 0 18px}
+.levels{display:flex;gap:8px;margin-bottom:18px}
+.levels button{flex:1;padding:10px 6px;border:2px solid var(--ink);background:transparent;color:var(--ink);font:600 .95rem "Work Sans",sans-serif;border-radius:10px}
+.levels button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.wall{background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:14px;min-height:240px;max-height:46vh;overflow-y:auto}
+.empty{color:var(--mute)}
+.line{margin:0 0 14px;max-width:88%}
+.line b{display:block;font-size:.8rem;color:var(--mute);font-weight:600}
+.line.tu{margin-left:auto;text-align:right}
+.line.ia p{margin:2px 0 0;border-left:5px solid var(--blue);padding-left:10px}
+.line.tu p{margin:2px 0 0}
+.controls{display:flex;align-items:center;gap:14px;margin:18px 0 10px}
+#mic{width:84px;height:84px;border-radius:50%;border:4px solid var(--ink);background:var(--blue);color:#fff;font:600 .9rem "Work Sans",sans-serif;flex:none}
+#mic.on{background:var(--yellow);color:#1b1b24;animation:pulse 1s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(255,210,63,.35)}}
+@media (prefers-reduced-motion:reduce){#mic.on{animation:none}}
+.hint{margin:0;color:var(--mute);font-size:.92rem}
+.type{display:flex;gap:8px}
+.type input{flex:1;min-width:0;padding:12px;border:2px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit}
+.type button,.fin{padding:12px 16px;border:2px solid var(--ink);border-radius:10px;background:var(--yellow);color:#1b1b24;font:600 1rem "Work Sans",sans-serif}
+.perm{display:block;width:100%;margin:0 0 14px;padding:14px 16px;border:2px solid var(--ink);border-radius:10px;background:var(--yellow);color:#1b1b24;font:600 1rem "Work Sans",sans-serif}
+.fin{background:transparent;color:var(--ink);margin-top:14px;width:100%}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#final{display:none;margin-top:16px;background:var(--paper);border:2px dashed var(--ink);border-radius:14px;padding:14px;white-space:pre-wrap}
+#final h2{font:1.2rem "Bowlby One",Impact,sans-serif;margin:0 0 8px}
+.note{color:var(--mute);font-size:.85rem;margin-top:22px}
+</style>
+</head>
+<body>
+<main>
+<h1>Freestyle Wall</h1>
+<p class="sub">Scegli il livello, rappa una frase e l'IA ti risponde a tempo.</p>
+
+<div class="levels" role="group" aria-label="Livello">
+<button data-l="1" aria-pressed="false">Principiante</button>
+<button data-l="2" aria-pressed="true">Rapper</button>
+<button data-l="3" aria-pressed="false">Boss</button>
+</div>
+
+<div class="wall" id="wall" aria-live="polite"><p class="empty">Il muro è vuoto. Tocca il microfono e lancia la prima barra.</p></div>
+
+<div class="controls">
+<button id="mic" aria-label="Parla">Rappa</button>
+<p class="hint" id="hint">Tocca, rappa, tocca di nuovo per fermare.</p>
+</div>
+
+<button class="perm" id="perm" type="button">Consenti l'accesso al microfono</button>
+
+<form class="type" id="form" onsubmit="return false">
+<input id="txt" placeholder="Oppure scrivi la tua barra" autocomplete="off">
+<button id="send" type="button">Invia</button>
+</form>
+
+<button class="fin" id="end" type="button">Fine freestyle: mostra il testo</button>
+<section id="final" aria-live="polite"></section>
+
+<p class="note"></p>
+</main>
+
+<script>
+(function(){
+var level=2,log=[],hist=[],wall=document.getElementById('wall');
+var BANK=[
+["ore","Ho il flow nel sangue e il fuoco nel cuore,|rimo sempre e non perdo il valore"],
+["ata","Entro nel beat, serata infuocata,|la tua rima è già finita, spacciata"],
+["ia","Il microfono è la mia magia,|ti seguo un attimo e poi ti porto via"],
+["ento","Rimo veloce come il vento,|ti rispondo in un momento"],
+["one","Sono il re di ogni canzone,|tu mi sfidi? Sei un pallone"],
+["ino","Rimo dal mattino al tavolino,|il mio flow è sempre più fino"],
+["ale","Il mio flow è fuori dal normale,|ogni barra è un colpo mortale"],
+["are","Con il beat mi metto a rappare,|nessun rapper mi può fermare"],
+["ere","Scrivo rime e prendo il potere,|tu mi ascolti e resti a tacere"],
+["ita","Metto in rima tutta la mia vita,|la mia penna è una salita infinita"],
+["ato","Il mio flow è sempre affilato,|tu rimani lì, spiazzato"],
+["à","Rimo forte in questa città,|il mio flow non si fermerà"],
+["ano","Microfono in mano, flow sovrano,|il palco è mio e tu sei lontano"],
+["ura","Rimo senza nessuna paura,|la mia barra è dura"],
+["oco","Dentro al microfono c'è un fuoco,|tu sei freddo, vieni a fare poco"]
+];
+var GEN=["Hai detto «W»? Ti rispondo sul beat,|la mia rima è un tuono, sei di troppo qui",
+"«W» è un buon inizio, ma sono più veloce,|io spezzo il ritmo e tu perdi la voce",
+"Con «W» non mi fai paura,|il mio flow è una scarica, la tua barra è moscia e scura"];
+function lastWord(t){var w=t.toLowerCase().replace(/[^a-zàèéìòù\s']/g,'').trim().split(/\s+/);return w[w.length-1]||''}
+function reply(t){
+ var w=lastWord(t),pick=null;
+ for(var i=0;i<BANK.length;i++){if(w.length>2&&w.slice(-BANK[i][0].length)===BANK[i][0]&&w!==BANK[i][0]){pick=BANK[i][1];break}}
+ if(!pick)pick=GEN[Math.floor(Math.random()*GEN.length)].replace('W',w||'questo');
+ var p=pick.split('|');
+ if(level===1)return p[0];
+ if(level===2)return p.join(', ');
+ return p.join(', ')+', e con «'+(w||'beat')+'» ti faccio un bis: lo prendo, lo spezzo, ora tocca a te';
+}
+function add(who,t){
+ var e=wall.querySelector('.empty');if(e)e.remove();
+ var d=document.createElement('div');d.className='line '+who;
+ var b=document.createElement('b');b.textContent=who==='tu'?'Tu':'IA';
+ var p=document.createElement('p');p.textContent=t;
+ d.appendChild(b);d.appendChild(p);wall.appendChild(d);wall.scrollTop=wall.scrollHeight;
+ log.push((who==='tu'?'Tu: ':'IA: ')+t);
+}
+function speak(t){
+ try{
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(t);u.lang='it-IT';
+  u.rate=level===1?1:level===2?1.15:1.3;u.pitch=level===3?.8:.9;
+  speechSynthesis.speak(u);
+ }catch(e){}
+}
+function turn(t){
+ t=(t||'').trim();if(!t)return;
+ add('tu',t);
+ hist.push({role:'user',content:t});
+ fetch('/api/rap',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({level:level,history:hist.slice(-8)})})
+ .then(function(r){return r.json()})
+ .then(function(d){if(!d.text)throw 0;hist.push({role:'assistant',content:d.text});add('ia',d.text.replace(/\n/g,', '));speak(d.text.replace(/\n/g,'. '))})
+ .catch(function(){add('ia','Il server non risponde, riprova tra poco.')});
+}
+var lv=document.querySelectorAll('.levels button');
+lv.forEach(function(b){b.addEventListener('click',function(){
+ level=+b.dataset.l;lv.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+})});
+var txt=document.getElementById('txt');
+function sendTxt(){turn(txt.value);txt.value=''}
+document.getElementById('send').addEventListener('click',sendTxt);
+txt.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sendTxt()}});
+
+var mic=document.getElementById('mic'),hint=document.getElementById('hint'),rec=null,on=false;
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){hint.textContent='Il riconoscimento vocale non è disponibile in questo browser: scrivi la barra qui sotto.';mic.disabled=true;mic.style.opacity=.5}
+mic.addEventListener('click',function(){
+ if(!SR)return;
+ if(on){rec&&rec.stop();return}
+ try{
+  rec=new SR();rec.lang='it-IT';rec.interimResults=false;rec.continuous=false;
+  rec.onresult=function(e){turn(e.results[0][0].transcript)};
+  rec.onerror=function(e){hint.textContent=e.error==='not-allowed'?'Microfono bloccato: consenti l’accesso o scrivi la barra.':'Non ti ho sentito, riprova.'};
+  rec.onend=function(){on=false;mic.classList.remove('on');mic.textContent='Rappa'};
+  rec.start();on=true;mic.classList.add('on');mic.textContent='Ascolto';hint.textContent='Sto ascoltando… tocca per fermare.';
+ }catch(e){hint.textContent='Microfono non avviabile: scrivi la barra.'}
+});
+
+var perm=document.getElementById('perm');
+function granted(){perm.style.display='none';hint.textContent='Microfono attivo. Tocca il pulsante e rappa.'}
+perm.addEventListener('click',function(){
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){hint.textContent='Questo browser non permette l’accesso al microfono: scrivi la barra.';return}
+ navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
+  s.getTracks().forEach(function(t){t.stop()});granted();
+ }).catch(function(){
+  hint.textContent='Accesso negato o bloccato. Consentilo dalle impostazioni del browser per questo sito, oppure scrivi la barra.';
+ });
+});
+try{
+ if(navigator.permissions&&navigator.permissions.query){
+  navigator.permissions.query({name:'microphone'}).then(function(r){if(r.state==='granted')granted()}).catch(function(){});
+ }
+}catch(e){}
+
+var fin=document.getElementById('final');
+document.getElementById('end').addEventListener('click',function(){
+ try{speechSynthesis.cancel()}catch(e){}
+ fin.style.display='block';
+ fin.textContent='';
+ var h=document.createElement('h2');h.textContent='Il tuo freestyle';fin.appendChild(h);
+ fin.appendChild(document.createTextNode(log.length?log.join('\n'):'Non hai ancora rappato: lancia la prima barra.'));
+ fin.scrollIntoView({behavior:'smooth'});
+});
+})();
+</script>
+</body>
+</html>
