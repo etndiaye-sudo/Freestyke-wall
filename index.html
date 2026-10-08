@@ -4,185 +4,190 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Freestyle Wall</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Work+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Work+Sans:wght@400;600&display=swap">
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#d8d4cb;--ink:#1b1b24;--paper:#efece5;--blue:#2338ff;--yellow:#ffd23f;--mute:#6a665e}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#26242c;--ink:#ece8df;--paper:#37333f;--mute:#a9a4b3}}
-:root[data-theme="dark"]{--bg:#26242c;--ink:#ece8df;--paper:#37333f;--mute:#a9a4b3}
-*{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Work Sans",system-ui,sans-serif;min-height:100vh}
-main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
-h1{font:2.2rem/1 "Bowlby One",Impact,sans-serif;margin:8px 0 4px;letter-spacing:.5px}
-.sub{color:var(--mute);margin:0 0 18px}
-.levels{display:flex;gap:8px;margin-bottom:18px}
-.levels button{flex:1;padding:10px 6px;border:2px solid var(--ink);background:transparent;color:var(--ink);font:600 .95rem "Work Sans",sans-serif;border-radius:10px}
-.levels button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-.wall{background:var(--paper);border:2px solid var(--ink);border-radius:14px;padding:14px;min-height:240px;max-height:46vh;overflow-y:auto}
-.empty{color:var(--mute)}
-.line{margin:0 0 14px;max-width:88%}
-.line b{display:block;font-size:.8rem;color:var(--mute);font-weight:600}
-.line.tu{margin-left:auto;text-align:right}
-.line.ia p{margin:2px 0 0;border-left:5px solid var(--blue);padding-left:10px}
-.line.tu p{margin:2px 0 0}
-.controls{display:flex;align-items:center;gap:14px;margin:18px 0 10px}
-#mic{width:84px;height:84px;border-radius:50%;border:4px solid var(--ink);background:var(--blue);color:#fff;font:600 .9rem "Work Sans",sans-serif;flex:none}
-#mic.on{background:var(--yellow);color:#1b1b24;animation:pulse 1s infinite}
-@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(255,210,63,.35)}}
-@media (prefers-reduced-motion:reduce){#mic.on{animation:none}}
-.hint{margin:0;color:var(--mute);font-size:.92rem}
-.type{display:flex;gap:8px}
-.type input{flex:1;min-width:0;padding:12px;border:2px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit}
-.type button,.fin{padding:12px 16px;border:2px solid var(--ink);border-radius:10px;background:var(--yellow);color:#1b1b24;font:600 1rem "Work Sans",sans-serif}
-.perm{display:block;width:100%;margin:0 0 14px;padding:14px 16px;border:2px solid var(--ink);border-radius:10px;background:var(--yellow);color:#1b1b24;font:600 1rem "Work Sans",sans-serif}
-.fin{background:transparent;color:var(--ink);margin-top:14px;width:100%}
-:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-#final{display:none;margin-top:16px;background:var(--paper);border:2px dashed var(--ink);border-radius:14px;padding:14px;white-space:pre-wrap}
-#final h2{font:1.2rem "Bowlby One",Impact,sans-serif;margin:0 0 8px}
-.note{color:var(--mute);font-size:.85rem;margin-top:22px}
+:root{box-sizing:border-box;--bg:#0b0a14;--ink:#f1eeff;--mute:#9a94c4;--c:#22e5ff;--p:#ff3d8b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 "Work Sans",system-ui,sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+#stage{position:fixed;inset:0;display:flex;flex-direction:column;padding:calc(22px + env(safe-area-inset-top,0px)) 24px calc(26px + env(safe-area-inset-bottom,0px));max-width:560px;margin:0 auto}
+.bg{position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='68'%3E%3Crect width='80' height='68' fill='%232c2330'/%3E%3Cpath d='M0 1H80M0 35H80M1 0V34M41 35V68' stroke='%2314101a' stroke-width='3'/%3E%3C/svg%3E")}
+.bg::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(0,0,0,0) 20%,rgba(0,0,0,.85) 100%)}
+.fr{position:fixed;inset:10px;border-radius:16px;pointer-events:none;box-shadow:inset 0 0 0 3px var(--c),inset 0 0 24px var(--c),0 0 24px var(--c);opacity:.5;transition:opacity .12s,box-shadow .4s}
+.hit .fr{opacity:1}
+header{position:relative;display:flex;justify-content:space-between;align-items:center}
+.brand{font:1.35rem "Permanent Marker","DejaVu Sans",cursive;color:var(--p);text-shadow:0 0 14px var(--p)}
+.tags button{margin-left:4px;padding:6px 8px;font:.95rem "Permanent Marker","DejaVu Sans",cursive;color:var(--mute)}
+.tags button.on{color:var(--c);text-shadow:0 0 14px var(--c),0 0 30px var(--c)}
+#sp{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:10px 4px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 30%);mask-image:linear-gradient(transparent,#000 30%)}
+.line{font:clamp(18px,5.8vw,28px)/1.12 "Permanent Marker","DejaVu Sans",cursive;white-space:pre-line;transform:rotate(var(--r));transition:opacity .5s}
+.line.me{align-self:flex-start;color:var(--c);text-shadow:0 0 16px var(--c);font-size:clamp(15px,4.6vw,22px)}
+.line.ai{align-self:flex-end;text-align:right;color:var(--p);text-shadow:0 0 18px var(--p)}
+.line span{display:inline-block;animation:pop .35s both}
+@keyframes pop{from{opacity:0;transform:scale(1.7);filter:blur(7px)}to{opacity:1;transform:none;filter:none}}
+.line:nth-last-child(n+3){opacity:.45}.line:nth-last-child(n+5){opacity:.2}
+.chw{position:relative;height:36%;min-height:150px;display:flex;justify-content:center;align-items:flex-end}
+#ch{height:100%;width:auto;filter:drop-shadow(0 0 14px var(--c));transition:transform .11s}
+.hit #ch{transform:translateY(7px) scaleY(.975)}
+#bd{transform-origin:50% 90%}
+.talk #bd{animation:tk .45s ease-in-out infinite alternate}
+@keyframes tk{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+.stroke{stroke:var(--c);transition:stroke .4s}
+footer{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:10px}
+#mic{width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--c),#7c3aed);box-shadow:0 0 34px var(--c);display:grid;place-items:center;color:#0b0a14;transition:box-shadow .4s}
+#mic svg{width:34px;height:34px}
+#mic.on{animation:pu 1s ease-in-out infinite}
+@keyframes pu{50%{transform:scale(1.09);box-shadow:0 0 52px var(--c)}}
+#txt{width:100%;max-width:300px;background:none;border:0;border-bottom:1px solid rgba(154,148,196,.4);color:var(--ink);text-align:center;padding:6px;font:inherit;outline:0}
+#txt::placeholder{color:var(--mute)}
+#hint{margin:0;font-size:.85rem;color:var(--mute);min-height:1.2em}
+.mrow{display:flex;align-items:center;justify-content:center;gap:24px}
+.side{width:72px;color:var(--mute);font-weight:600;font-size:.92rem}
+#pn{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+#pn[hidden]{display:none}
+.up{cursor:pointer;color:var(--mute);font-weight:600;font-size:.92rem}
+#chest{opacity:.45;transition:opacity .1s}.hit #chest{opacity:1}
+.chw{height:40%}
+#bulb{animation:bl 1.1s ease-in-out infinite alternate;filter:drop-shadow(0 0 7px #ff3d8b)}
+@keyframes bl{from{opacity:.45}to{opacity:1}}
+.pr{display:flex;gap:18px;align-items:center}
+.sel{background:none;border:0;color:var(--mute);font:600 .92rem "Work Sans",sans-serif}.sel option{color:#000}
+#tut{position:fixed;inset:0;z-index:30}
+.dim2{position:absolute;inset:0;background:rgba(3,2,8,.72)}
+.tip{position:absolute;left:24px;right:24px;max-width:512px;margin:0 auto;text-align:center}
+.tip p{margin:0 0 14px;font-size:1.15rem;font-weight:600}
+.tb{display:flex;align-items:center;justify-content:space-between}
+.tb button{padding:10px 8px;font-weight:600;color:var(--mute)}
+.tb #nx{color:var(--c);font-size:1.05rem;text-shadow:0 0 14px var(--c)}
+.dots i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mute);opacity:.4;margin:0 3px}
+.dots i.on{background:var(--c);opacity:1}
+.hl{position:relative;z-index:31;filter:drop-shadow(0 0 14px var(--c))}
+#hud{position:relative;display:flex;justify-content:center;gap:18px;align-items:baseline;margin-top:6px;font:1.4rem "Permanent Marker","DejaVu Sans",cursive}
+#hm{color:var(--c);text-shadow:0 0 12px var(--c)}#ha{color:var(--p);text-shadow:0 0 12px var(--p)}
+#rd{color:var(--mute);font:600 .8rem "Work Sans",sans-serif;letter-spacing:.08em}
+.pt{display:inline-block;font:normal 1.05em "Permanent Marker","DejaVu Sans",cursive;margin-left:8px;color:#fff;text-shadow:0 0 12px var(--c);animation:pop .4s both}
+#rm{align-self:center;margin:6px 0;padding:10px 24px;font:1.3rem "Permanent Marker","DejaVu Sans",cursive;color:var(--c);text-shadow:0 0 16px var(--c)}
+#rm[hidden]{display:none}
+:focus-visible{outline:2px solid var(--c);outline-offset:4px;border-radius:8px}
+
+#intro{position:fixed;inset:0;z-index:20;background:#1d1620;overflow:hidden;display:grid;place-items:center;transition:opacity .6s}
+#intro.out{opacity:0;pointer-events:none}
+#intro .bg{position:absolute}
+.nb{position:absolute;border-radius:3px}
+.nb.t,.nb.b{left:14px;right:14px;height:5px;background:#22e5ff;box-shadow:0 0 14px #22e5ff,0 0 32px #22e5ff}
+.nb.l,.nb.r{top:14px;bottom:14px;width:5px;background:#ff3d8b;box-shadow:0 0 14px #ff3d8b,0 0 32px #ff3d8b}
+.nb.t{top:14px}.nb.b{bottom:14px}.nb.l{left:14px}.nb.r{right:14px}
+.logo{position:relative;font:clamp(56px,19vw,104px)/1 "Permanent Marker","DejaVu Sans",cursive;color:#ff3d8b;transform:rotate(-5deg) skewX(-6deg);-webkit-text-stroke:2px #ff3d8b;text-shadow:0 0 12px rgba(255,61,139,.9),0 0 34px rgba(255,61,139,.6)}
+.ln{display:block;width:max-content;filter:url(#spray)}
+.can{position:absolute;top:10%;left:100%;width:34px;height:52px}
+.can::before{content:"";position:absolute;left:-30px;top:8px;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle,rgba(255,61,139,.95),rgba(255,61,139,0) 70%)}
+.can svg{position:absolute;inset:0;transform:rotate(-24deg)}
+.drip{position:absolute;top:100%;width:5px;height:0;border-radius:3px;background:#ff3d8b;box-shadow:0 0 8px #ff3d8b;margin-top:-10px}
+.tap{position:absolute;bottom:12%;left:0;right:0;text-align:center;font-weight:600;letter-spacing:.05em}
+.run .nb.t{animation:lit 1.2s .1s both}.run .nb.r{animation:lit 1.2s .5s both}.run .nb.b{animation:lit 1.2s .9s both}.run .nb.l{animation:lit 1.2s 1.3s both}
+@keyframes lit{0%{opacity:0}12%{opacity:1}22%{opacity:.15}34%{opacity:1}46%{opacity:.4}60%,100%{opacity:1}}
+.run .l1{animation:rv 2.2s 1.9s linear both}.run .l2{animation:rv 1s 4.56s linear both}
+@keyframes rv{from{clip-path:inset(-80% 100% -80% -40%)}to{clip-path:inset(-80% -40% -80% -40%)}}
+.run .can{animation:sw 3.8s 1.9s linear both}
+@keyframes sw{0%{left:-4%;top:10%;opacity:0}5%{opacity:1}58%{left:100%;top:10%;opacity:1}62%{left:100%;top:10%;opacity:0}66%{left:-4%;top:78%;opacity:0}70%{left:-4%;top:78%;opacity:1}96%{left:46%;top:78%;opacity:1}100%{left:46%;top:78%;opacity:0}}
+.run .drip{animation:dr 1.6s 5.4s ease-in both}
+@keyframes dr{to{height:var(--h)}}
+.run .tap{animation:fi 1s 6s both}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.talk #bd,#mic.on{animation:none}}
 </style>
 </head>
 <body>
-<main>
-<h1>Freestyle Wall</h1>
-<p class="sub">Scegli il livello, rappa una frase e l'IA ti risponde a tempo.</p>
+<svg width="0" height="0" aria-hidden="true"><filter id="spray" x="-30%" y="-60%" width="160%" height="220%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4" result="d"/><feGaussianBlur in="d" stdDeviation=".9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="d"/></feMerge></filter></svg>
 
-<div class="levels" role="group" aria-label="Livello">
-<button data-l="1" aria-pressed="false">Principiante</button>
-<button data-l="2" aria-pressed="true">Rapper</button>
-<button data-l="3" aria-pressed="false">Boss</button>
+<div class="bg"></div><div class="fr"></div>
+<div id="stage">
+<header><span class="brand">Freestyle wall</span><span class="tags" id="tg"><button data-l="1">Base</button><button class="on" data-l="2">Rapper</button><button data-l="3">Boss</button></span></header>
+<div id="hud"><span id="hm">0</span><b id="rd">R1/3</b><span id="ha">0</span></div>
+<section id="sp" aria-live="polite"></section>
+<button id="rm" type="button" hidden></button>
+<div class="chw">
+<svg id="ch" viewBox="0 -24 200 274" aria-label="Il robot rapper">
+<g id="bd">
+<path d="M100 16V-6" stroke="#ff3d8b" stroke-width="4" stroke-linecap="round"/><circle id="bulb" cx="100" cy="-13" r="8" fill="#ff3d8b"/>
+<rect x="60" y="150" width="80" height="78" rx="24" fill="#17132b" class="stroke" stroke-width="3"/>
+<rect x="38" y="164" width="22" height="54" rx="11" fill="#17132b" class="stroke" stroke-width="3"/>
+<rect x="140" y="164" width="22" height="54" rx="11" fill="#17132b" class="stroke" stroke-width="3"/>
+<circle id="chest" cx="100" cy="188" r="9" fill="var(--c)"/>
+<rect x="30" y="34" width="140" height="116" rx="44" fill="#17132b" class="stroke" stroke-width="3"/>
+<rect x="44" y="52" width="112" height="84" rx="30" fill="#05040c" class="stroke" stroke-width="2"/>
+<rect id="eL" x="69" y="77" width="18" height="26" rx="9" fill="var(--c)"/>
+<rect id="eR" x="113" y="77" width="18" height="26" rx="9" fill="var(--c)"/>
+<g id="vz"></g>
+<path id="hL" d="M68 97Q78 78 88 97" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" display="none"/><path id="hR" d="M112 97Q122 78 132 97" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" display="none"/>
+<path d="M24 104Q24 14 100 14Q176 14 176 104" fill="none" stroke="#ff3d8b" stroke-width="7" stroke-linecap="round"/>
+<rect x="14" y="84" width="20" height="46" rx="10" fill="#ff3d8b"/><rect x="166" y="84" width="20" height="46" rx="10" fill="#ff3d8b"/>
+</g></svg></div>
+<footer>
+<p id="hint">Tocca il microfono e rappa</p>
+<div class="mrow"><button id="bt" class="side" type="button">Beat on</button>
+<button id="mic" type="button" aria-label="Rappa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+<button id="more" class="side" type="button" aria-label="Altre opzioni">+</button></div>
+<div id="pn" hidden><label class="up" id="up"><input type="file" id="f" accept="audio/*" hidden>Carica la tua base</label>
+<input id="txt" placeholder="o scrivi la tua barra" autocomplete="off">
+<span class="pr"><select id="lg" class="sel" aria-label="Language"><option value="it">Italiano</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="pt">Português</option></select><button id="rt" class="up" type="button" aria-label="Tutorial">?</button></span></div>
+</footer>
+<div id="tut" hidden><div class="dim2"></div><div class="tip"><p id="tt"></p><div class="tb"><button id="sk" type="button"></button><span class="dots" id="dots"></span><button id="nx" type="button"></button></div></div></div>
 </div>
+<audio id="au" loop></audio>
 
-<div class="wall" id="wall" aria-live="polite"><p class="empty">Il muro è vuoto. Tocca il microfono e lancia la prima barra.</p></div>
-
-<div class="controls">
-<button id="mic" aria-label="Parla">Rappa</button>
-<p class="hint" id="hint">Tocca, rappa, tocca di nuovo per fermare.</p>
-</div>
-
-<button class="perm" id="perm" type="button">Consenti l'accesso al microfono</button>
-
-<form class="type" id="form" onsubmit="return false">
-<input id="txt" placeholder="Oppure scrivi la tua barra" autocomplete="off">
-<button id="send" type="button">Invia</button>
-</form>
-
-<button class="fin" id="end" type="button">Fine freestyle: mostra il testo</button>
-<section id="final" aria-live="polite"></section>
-
-<p class="note"></p>
-</main>
+<section id="intro" class="run" aria-label="Benvenuto">
+<div class="bg"></div>
+<i class="nb t"></i><i class="nb r"></i><i class="nb b"></i><i class="nb l"></i>
+<div class="logo"><span class="ln l1">Freestyle</span><span class="ln l2">Wall</span>
+<i class="drip" style="left:6%;--h:34px"></i><i class="drip" style="left:19%;--h:20px"></i><i class="drip" style="left:33%;--h:44px"></i>
+<div class="can"><svg viewBox="0 0 34 52" aria-hidden="true"><rect x="6" y="14" width="22" height="36" rx="4" fill="#22e5ff"/><rect x="9" y="6" width="16" height="9" rx="2" fill="#ff3d8b"/><rect x="14" y="1" width="6" height="6" fill="#f1eeff"/></svg></div></div>
+<div class="tap">Tocca per entrare</div>
+</section>
 
 <script>
 (function(){
-var level=2,log=[],hist=[],wall=document.getElementById('wall');
-var BANK=[
-["ore","Ho il flow nel sangue e il fuoco nel cuore,|rimo sempre e non perdo il valore"],
-["ata","Entro nel beat, serata infuocata,|la tua rima è già finita, spacciata"],
-["ia","Il microfono è la mia magia,|ti seguo un attimo e poi ti porto via"],
-["ento","Rimo veloce come il vento,|ti rispondo in un momento"],
-["one","Sono il re di ogni canzone,|tu mi sfidi? Sei un pallone"],
-["ino","Rimo dal mattino al tavolino,|il mio flow è sempre più fino"],
-["ale","Il mio flow è fuori dal normale,|ogni barra è un colpo mortale"],
-["are","Con il beat mi metto a rappare,|nessun rapper mi può fermare"],
-["ere","Scrivo rime e prendo il potere,|tu mi ascolti e resti a tacere"],
-["ita","Metto in rima tutta la mia vita,|la mia penna è una salita infinita"],
-["ato","Il mio flow è sempre affilato,|tu rimani lì, spiazzato"],
-["à","Rimo forte in questa città,|il mio flow non si fermerà"],
-["ano","Microfono in mano, flow sovrano,|il palco è mio e tu sei lontano"],
-["ura","Rimo senza nessuna paura,|la mia barra è dura"],
-["oco","Dentro al microfono c'è un fuoco,|tu sei freddo, vieni a fare poco"]
-];
-var GEN=["Hai detto «W»? Ti rispondo sul beat,|la mia rima è un tuono, sei di troppo qui",
-"«W» è un buon inizio, ma sono più veloce,|io spezzo il ritmo e tu perdi la voce",
-"Con «W» non mi fai paura,|il mio flow è una scarica, la tua barra è moscia e scura"];
-function lastWord(t){var w=t.toLowerCase().replace(/[^a-zàèéìòù\s']/g,'').trim().split(/\s+/);return w[w.length-1]||''}
-function reply(t){
- var w=lastWord(t),pick=null;
- for(var i=0;i<BANK.length;i++){if(w.length>2&&w.slice(-BANK[i][0].length)===BANK[i][0]&&w!==BANK[i][0]){pick=BANK[i][1];break}}
- if(!pick)pick=GEN[Math.floor(Math.random()*GEN.length)].replace('W',w||'questo');
- var p=pick.split('|');
- if(level===1)return p[0];
- if(level===2)return p.join(', ');
- return p.join(', ')+', e con «'+(w||'beat')+'» ti faccio un bis: lo prendo, lo spezzo, ora tocca a te';
+var $=function(i){return document.getElementById(i)},st=$('stage'),sp=$('sp'),mic=$('mic'),hint=$('hint'),au=$('au'),
+ctx=null,master=null,noise=null,bpm=92,step=0,nextT=0,beatOn=false,custom=false,url=null,
+L={"it":{"h":"Tocca il microfono e rappa","l":"Ti ascolto…","b":"Microfono non disponibile: scrivi la barra","u":"Carica la tua base","p":"o scrivi la tua barra","t":"Tocca per entrare","g":"Ehi! Dammi una barra,\nvediamo se tieni il tempo","l1":"Base","s1":"Scegli la sfida: Base ti aspetta, Boss ti mangia vivo.","s2":"Tocca il microfono e butta fuori una barra. L'IA ti risponde a rima.","s3":"Hai un beat tuo? Caricalo e rappa sopra la tua base.","sk":"Salta","nx":"Avanti","go":"Via!"},"en":{"h":"Tap the mic and rap","l":"Listening…","b":"Mic unavailable: type your bar","u":"Upload your beat","p":"or type your bar","t":"Tap to enter","g":"Hey! Drop me a bar,\nlet's see if you keep the beat","l1":"Easy","s1":"Pick your challenge: Easy waits for you, Boss eats you alive.","s2":"Tap the mic and spit a bar. The AI answers in rhyme.","s3":"Got your own beat? Upload it and rap over it.","sk":"Skip","nx":"Next","go":"Go!"},"es":{"h":"Toca el micrófono y rapea","l":"Te escucho…","b":"Micrófono no disponible: escribe tu barra","u":"Sube tu base","p":"o escribe tu barra","t":"Toca para entrar","g":"¡Eh! Suéltame una barra,\nveamos si llevas el ritmo","l1":"Fácil","s1":"Elige el reto: Fácil te espera, Boss te devora.","s2":"Toca el micrófono y suelta una barra. La IA responde rimando.","s3":"¿Tienes tu propio beat? Súbelo y rapea encima.","sk":"Saltar","nx":"Siguiente","go":"¡Vamos!"},"fr":{"h":"Touche le micro et rappe","l":"Je t'écoute…","b":"Micro indisponible : écris ta barre","u":"Charge ton beat","p":"ou écris ta barre","t":"Touche pour entrer","g":"Hé ! Balance-moi une barre,\non voit si tu tiens le rythme","l1":"Facile","s1":"Choisis ton défi : Facile t'attend, Boss te dévore.","s2":"Touche le micro et lance une barre. L'IA répond en rimes.","s3":"Tu as ton beat ? Charge-le et rappe dessus.","sk":"Passer","nx":"Suivant","go":"C'est parti !"},"de":{"h":"Tippe aufs Mikro und rappe","l":"Ich höre zu…","b":"Mikro nicht verfügbar: schreib deine Bar","u":"Eigenen Beat laden","p":"oder schreib deine Bar","t":"Tippen zum Starten","g":"Hey! Wirf mir eine Bar hin,\nmal sehen ob du im Takt bleibst","l1":"Leicht","s1":"Wähle deine Challenge: Leicht wartet, Boss frisst dich.","s2":"Tippe aufs Mikro und spit eine Bar. Die KI antwortet im Reim.","s3":"Eigener Beat? Lade ihn hoch und rappe drüber.","sk":"Skip","nx":"Weiter","go":"Los!"},"pt":{"h":"Toque no microfone e rape","l":"Ouvindo…","b":"Microfone indisponível: escreva sua barra","u":"Carregue seu beat","p":"ou escreva sua barra","t":"Toque para entrar","g":"Ei! Solta uma barra,\nvamos ver se você segura o ritmo","l1":"Fácil","s1":"Escolha o desafio: Fácil te espera, Boss te devora.","s2":"Toque no microfone e solte uma barra. A IA responde rimando.","s3":"Tem seu próprio beat? Carregue e rape por cima.","sk":"Pular","nx":"Próximo","go":"Bora!"}},C={it:'it-IT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',pt:'pt-BR'},lang='it',mood='',lvl=2,talk=false,think=false,lis=false,t=0,rec=null,bars=[],body=document.body;
+var vz=$('vz');
+(function(){var q=null;try{q=localStorage.getItem('fw_lang')}catch(e){}if(!(q&&L[q])){q=(navigator.language||'it').slice(0,2);if(!L[q])q='en'}lang=q})();
+var ER={it:"Il server non risponde, riprova tra poco.",en:"The server isn't responding, try again soon.",es:"El servidor no responde, inténtalo de nuevo pronto.",fr:"Le serveur ne répond pas, réessaie bientôt.",de:"Der Server antwortet nicht, versuch es gleich nochmal.",pt:"O servidor não responde, tente de novo em breve."},hist=[];
+Object.keys(L).forEach(function(k){Object.assign(L[k],{"it":{"v1":"VITTORIA!","v2":"SCONFITTA…","v3":"PAREGGIO","rm":"Rivincita","n":"Ehi, ti sei addormentato?"},"en":{"v1":"VICTORY!","v2":"DEFEAT…","v3":"DRAW","rm":"Rematch","n":"Hey, did you fall asleep?"},"es":{"v1":"¡VICTORIA!","v2":"DERROTA…","v3":"EMPATE","rm":"Revancha","n":"¿Te has dormido?"},"fr":{"v1":"VICTOIRE !","v2":"DÉFAITE…","v3":"ÉGALITÉ","rm":"Revanche","n":"Hé, tu t'es endormi ?"},"de":{"v1":"SIEG!","v2":"NIEDERLAGE…","v3":"UNENTSCHIEDEN","rm":"Revanche","n":"Hey, eingeschlafen?"},"pt":{"v1":"VITÓRIA!","v2":"DERROTA…","v3":"EMPATE","rm":"Revanche","n":"Ei, dormiu?"}}[k])});
+function T(k){return L[lang][k]}
+for(var i=0;i<7;i++){var r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',79+i*6.4);r.setAttribute('width',3.6);r.setAttribute('rx',1.8);r.setAttribute('fill','#ff3d8b');vz.appendChild(r);bars.push(r)}
+function actx(){
+ if(!ctx){ctx=new(window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.5;master.connect(ctx.destination);
+  var n=ctx.sampleRate/2,b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);for(var i=0;i<n;i++)d[i]=Math.random()*2-1;noise=b}
+ if(ctx.state==='suspended')ctx.resume();
 }
-function add(who,t){
- var e=wall.querySelector('.empty');if(e)e.remove();
- var d=document.createElement('div');d.className='line '+who;
- var b=document.createElement('b');b.textContent=who==='tu'?'Tu':'IA';
- var p=document.createElement('p');p.textContent=t;
- d.appendChild(b);d.appendChild(p);wall.appendChild(d);wall.scrollTop=wall.scrollHeight;
- log.push((who==='tu'?'Tu: ':'IA: ')+t);
-}
-function speak(t){
- try{
-  if(!window.speechSynthesis)return;
-  speechSynthesis.cancel();
-  var u=new SpeechSynthesisUtterance(t);u.lang='it-IT';
-  u.rate=level===1?1:level===2?1.15:1.3;u.pitch=level===3?.8:.9;
-  speechSynthesis.speak(u);
- }catch(e){}
-}
-function turn(t){
- t=(t||'').trim();if(!t)return;
- add('tu',t);
- hist.push({role:'user',content:t});
- fetch('/api/rap',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({level:level,history:hist.slice(-8)})})
- .then(function(r){return r.json()})
- .then(function(d){if(!d.text)throw 0;hist.push({role:'assistant',content:d.text});add('ia',d.text.replace(/\n/g,', '));speak(d.text.replace(/\n/g,'. '))})
- .catch(function(){add('ia','Il server non risponde, riprova tra poco.')});
-}
-var lv=document.querySelectorAll('.levels button');
-lv.forEach(function(b){b.addEventListener('click',function(){
- level=+b.dataset.l;lv.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
-})});
-var txt=document.getElementById('txt');
-function sendTxt(){turn(txt.value);txt.value=''}
-document.getElementById('send').addEventListener('click',sendTxt);
-txt.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sendTxt()}});
-
-var mic=document.getElementById('mic'),hint=document.getElementById('hint'),rec=null,on=false;
-var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){hint.textContent='Il riconoscimento vocale non è disponibile in questo browser: scrivi la barra qui sotto.';mic.disabled=true;mic.style.opacity=.5}
-mic.addEventListener('click',function(){
- if(!SR)return;
- if(on){rec&&rec.stop();return}
- try{
-  rec=new SR();rec.lang='it-IT';rec.interimResults=false;rec.continuous=false;
-  rec.onresult=function(e){turn(e.results[0][0].transcript)};
-  rec.onerror=function(e){hint.textContent=e.error==='not-allowed'?'Microfono bloccato: consenti l’accesso o scrivi la barra.':'Non ti ho sentito, riprova.'};
-  rec.onend=function(){on=false;mic.classList.remove('on');mic.textContent='Rappa'};
-  rec.start();on=true;mic.classList.add('on');mic.textContent='Ascolto';hint.textContent='Sto ascoltando… tocca per fermare.';
- }catch(e){hint.textContent='Microfono non avviabile: scrivi la barra.'}
-});
-
-var perm=document.getElementById('perm');
-function granted(){perm.style.display='none';hint.textContent='Microfono attivo. Tocca il pulsante e rappa.'}
-perm.addEventListener('click',function(){
- if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){hint.textContent='Questo browser non permette l’accesso al microfono: scrivi la barra.';return}
- navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
-  s.getTracks().forEach(function(t){t.stop()});granted();
- }).catch(function(){
-  hint.textContent='Accesso negato o bloccato. Consentilo dalle impostazioni del browser per questo sito, oppure scrivi la barra.';
- });
-});
-try{
- if(navigator.permissions&&navigator.permissions.query){
-  navigator.permissions.query({name:'microphone'}).then(function(r){if(r.state==='granted')granted()}).catch(function(){});
+function kick(a){var o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(130,a);o.frequency.exponentialRampToValueAtTime(42,a+.16);g.gain.setValueAtTime(1,a);g.gain.exponentialRampToValueAtTime(.001,a+.32);o.connect(g);g.connect(master);o.start(a);o.stop(a+.34)}
+function nz(a,f,ty,du,v){var s=ctx.createBufferSource(),fl=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=noise;fl.type=ty;fl.frequency.value=f;g.gain.setValueAtTime(v,a);g.gain.exponentialRampToValueAtTime(.001,a+du);s.connect(fl);fl.connect(g);g.connect(master);s.start(a);s.stop(a+du+.02)}
+var K=[1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1],S=[0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0];
+function hit(a){setTimeout(function(){body.classList.add('hit');setTimeout(function(){body.classList.remove('hit')},110)},Math.max(0,(a-ctx.currentTime)*1000))}
+setInterval(function(){
+ if(!beatOn||custom||!ctx)return;
+ while(nextT<ctx.currentTime+.12){
+  var i=step%16,a=nextT;
+  if(K[i]){kick(a);hit(a)}
+  if(S[i]){nz(a,1800,'bandpass',.18,.7);hit(a)}
+  if(i%2===0)nz(a,8000,'highpass',.05,.22);
+  nextT+=60/bpm/4;step++;
  }
-}catch(e){}
-
-var fin=document.getElementById('final');
-document.getElementById('end').addEventListener('click',function(){
- try{speechSynthesis.cancel()}catch(e){}
- fin.style.display='block';
- fin.textContent='';
- var h=document.createElement('h2');h.textContent='Il tuo freestyle';fin.appendChild(h);
- fin.appendChild(document.createTextNode(log.length?log.join('\n'):'Non hai ancora rappato: lancia la prima barra.'));
- fin.scrollIntoView({behavior:'smooth'});
+},25);
+function lab(){var on=custom?!au.paused:beatOn;$('bt').textContent=on?'Beat on':'Beat off'}
+function beat(on){
+ if(custom){on?au.play():au.pause();lab();return}
+ beatOn=on;if(on){actx();step=0;nextT=ctx.currentTime+.05}lab();
+}
+$('bt').addEventListener('click',function(){beat(custom?au.paused:!beatOn)});
+$('f').addEventListener('change',function(){
+ var f=this.files[0];if(!f)return;
+ if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(f);au.src=url;au.volume=.55;
+ custom=true;beatOn=false;au.play();lab();hint.textContent='Base caricata: '+f.name;
 });
-})();
-</script>
-</body>
-</html>
+
+function line(who,x){
+ var d=document.createElement('div');d.className='line '+who;d.style.setProperty('--r',(Math.random()*6-3).toFixed(1)+'deg');
+ x.split(' ').forEach(function(w,i){if(w==='')return;var s=document.createElement('span');s.textContent=w+(w.indexOf('\n')>-1?'':' ');s.style.animationDelay=(i*.16)+'s';d.appendChild(s)});
+ d.innerHTML=x.split('\n').map(function(l){return l.split(' ').map(function(w,i){return '<span style="animation-delay:'+(i*.16)+'s">'+w.replace(/</g,'&lt;
