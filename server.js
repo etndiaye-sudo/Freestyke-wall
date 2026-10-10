@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -80,7 +81,17 @@ function localReply(text, level, lang) {
 
 const app = express();
 app.use(express.json({ limit: '20kb' }));
-app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+// la pagina è divisa in 3 parti, il server le unisce
+const PARTS = ['p1.html', 'p2.html', 'p3.html'];
+app.get('/', (_req, res) => {
+  try {
+    const html = PARTS.map(f => fs.readFileSync(path.join(__dirname, f), 'utf8')).join('');
+    res.type('html').send(html);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('Pagina non trovata');
+  }
+});
 
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const MODEL = process.env.MODEL || 'claude-haiku-4-5-20251001';
