@@ -1,0 +1,58 @@
+<button id="rm" type="button" hidden></button>
+<div class="chw">
+<svg id="ch" viewBox="0 -24 200 274" aria-label="Il robot rapper">
+<g id="bd">
+<path d="M100 16V-6" stroke="#ff3d8b" stroke-width="4" stroke-linecap="round"/><circle id="bulb" cx="100" cy="-13" r="8" fill="#ff3d8b"/>
+<rect x="60" y="150" width="80" height="78" rx="24" fill="#17132b" class="stroke" stroke-width="3"/>
+<rect x="38" y="164" width="22" height="54" rx="11" fill="#17132b" class="stroke" stroke-width="3"/>
+<rect x="140" y="164" width="22" height="54" rx="11" fill="#17132b" class="stroke" stroke-width="3"/>
+<circle id="chest" cx="100" cy="188" r="9" fill="var(--c)"/>
+<rect x="30" y="34" width="140" height="116" rx="44" fill="#17132b" class="stroke" stroke-width="3"/>
+<rect x="44" y="52" width="112" height="84" rx="30" fill="#05040c" class="stroke" stroke-width="2"/>
+<rect id="eL" x="69" y="77" width="18" height="26" rx="9" fill="var(--c)"/>
+<rect id="eR" x="113" y="77" width="18" height="26" rx="9" fill="var(--c)"/>
+<g id="vz"></g>
+<path id="hL" d="M68 97Q78 78 88 97" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" display="none"/><path id="hR" d="M112 97Q122 78 132 97" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" display="none"/>
+<path d="M24 104Q24 14 100 14Q176 14 176 104" fill="none" stroke="#ff3d8b" stroke-width="7" stroke-linecap="round"/>
+<rect x="14" y="84" width="20" height="46" rx="10" fill="#ff3d8b"/><rect x="166" y="84" width="20" height="46" rx="10" fill="#ff3d8b"/>
+</g></svg></div>
+<footer>
+<p id="hint">Tocca il microfono e rappa</p>
+<div class="mrow"><button id="bt" class="side" type="button">Beat on</button>
+<button id="mic" type="button" aria-label="Rappa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="12" rx="3" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+<button id="more" class="side" type="button" aria-label="Altre opzioni">+</button></div>
+<div id="pn" hidden><label class="up" id="up"><input type="file" id="f" accept="audio/*" hidden>Carica la tua base</label>
+<input id="txt" placeholder="o scrivi la tua barra" autocomplete="off">
+<span class="pr"><select id="lg" class="sel" aria-label="Language"><option value="it">Italiano</option><option value="en">English</option><option value="es">Español</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="pt">Português</option></select><button id="rt" class="up" type="button" aria-label="Tutorial">?</button></span></div>
+</footer>
+<div id="tut" hidden><div class="dim2"></div><div class="tip"><p id="tt"></p><div class="tb"><button id="sk" type="button"></button><span class="dots" id="dots"></span><button id="nx" type="button"></button></div></div></div>
+</div>
+<audio id="au" loop></audio>
+
+<section id="intro" class="run" aria-label="Benvenuto">
+<div class="bg"></div>
+<i class="nb t"></i><i class="nb r"></i><i class="nb b"></i><i class="nb l"></i>
+<div class="logo"><span class="ln l1">Freestyle</span><span class="ln l2">Wall</span>
+<i class="drip" style="left:6%;--h:34px"></i><i class="drip" style="left:19%;--h:20px"></i><i class="drip" style="left:33%;--h:44px"></i>
+<div class="can"><svg viewBox="0 0 34 52" aria-hidden="true"><rect x="6" y="14" width="22" height="36" rx="4" fill="#22e5ff"/><rect x="9" y="6" width="16" height="9" rx="2" fill="#ff3d8b"/><rect x="14" y="1" width="6" height="6" fill="#f1eeff"/></svg></div></div>
+<div class="tap">Tocca per entrare</div>
+</section>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)},st=$('stage'),sp=$('sp'),mic=$('mic'),hint=$('hint'),au=$('au'),
+ctx=null,master=null,noise=null,bpm=92,step=0,nextT=0,beatOn=false,custom=false,url=null,
+L={"it":{"h":"Tocca il microfono e rappa","l":"Ti ascolto…","b":"Microfono non disponibile: scrivi la barra","u":"Carica la tua base","p":"o scrivi la tua barra","t":"Tocca per entrare","g":"Ehi! Dammi una barra,\nvediamo se tieni il tempo","l1":"Base","s1":"Scegli la sfida: Base ti aspetta, Boss ti mangia vivo.","s2":"Tocca il microfono e butta fuori una barra. L'IA ti risponde a rima.","s3":"Hai un beat tuo? Caricalo e rappa sopra la tua base.","sk":"Salta","nx":"Avanti","go":"Via!"},"en":{"h":"Tap the mic and rap","l":"Listening…","b":"Mic unavailable: type your bar","u":"Upload your beat","p":"or type your bar","t":"Tap to enter","g":"Hey! Drop me a bar,\nlet's see if you keep the beat","l1":"Easy","s1":"Pick your challenge: Easy waits for you, Boss eats you alive.","s2":"Tap the mic and spit a bar. The AI answers in rhyme.","s3":"Got your own beat? Upload it and rap over it.","sk":"Skip","nx":"Next","go":"Go!"},"es":{"h":"Toca el micrófono y rapea","l":"Te escucho…","b":"Micrófono no disponible: escribe tu barra","u":"Sube tu base","p":"o escribe tu barra","t":"Toca para entrar","g":"¡Eh! Suéltame una barra,\nveamos si llevas el ritmo","l1":"Fácil","s1":"Elige el reto: Fácil te espera, Boss te devora.","s2":"Toca el micrófono y suelta una barra. La IA responde rimando.","s3":"¿Tienes tu propio beat? Súbelo y rapea encima.","sk":"Saltar","nx":"Siguiente","go":"¡Vamos!"},"fr":{"h":"Touche le micro et rappe","l":"Je t'écoute…","b":"Micro indisponible : écris ta barre","u":"Charge ton beat","p":"ou écris ta barre","t":"Touche pour entrer","g":"Hé ! Balance-moi une barre,\non voit si tu tiens le rythme","l1":"Facile","s1":"Choisis ton défi : Facile t'attend, Boss te dévore.","s2":"Touche le micro et lance une barre. L'IA répond en rimes.","s3":"Tu as ton beat ? Charge-le et rappe dessus.","sk":"Passer","nx":"Suivant","go":"C'est parti !"},"de":{"h":"Tippe aufs Mikro und rappe","l":"Ich höre zu…","b":"Mikro nicht verfügbar: schreib deine Bar","u":"Eigenen Beat laden","p":"oder schreib deine Bar","t":"Tippen zum Starten","g":"Hey! Wirf mir eine Bar hin,\nmal sehen ob du im Takt bleibst","l1":"Leicht","s1":"Wähle deine Challenge: Leicht wartet, Boss frisst dich.","s2":"Tippe aufs Mikro und spit eine Bar. Die KI antwortet im Reim.","s3":"Eigener Beat? Lade ihn hoch und rappe drüber.","sk":"Skip","nx":"Weiter","go":"Los!"},"pt":{"h":"Toque no microfone e rape","l":"Ouvindo…","b":"Microfone indisponível: escreva sua barra","u":"Carregue seu beat","p":"ou escreva sua barra","t":"Toque para entrar","g":"Ei! Solta uma barra,\nvamos ver se você segura o ritmo","l1":"Fácil","s1":"Escolha o desafio: Fácil te espera, Boss te devora.","s2":"Toque no microfone e solte uma barra. A IA responde rimando.","s3":"Tem seu próprio beat? Carregue e rape por cima.","sk":"Pular","nx":"Próximo","go":"Bora!"}},C={it:'it-IT',en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',pt:'pt-BR'},lang='it',mood='',lvl=2,talk=false,think=false,lis=false,t=0,rec=null,bars=[],body=document.body;
+var vz=$('vz');
+(function(){var q=null;try{q=localStorage.getItem('fw_lang')}catch(e){}if(!(q&&L[q])){q=(navigator.language||'it').slice(0,2);if(!L[q])q='en'}lang=q})();
+var ER={it:"Il server non risponde, riprova tra poco.",en:"The server isn't responding, try again soon.",es:"El servidor no responde, inténtalo de nuevo pronto.",fr:"Le serveur ne répond pas, réessaie bientôt.",de:"Der Server antwortet nicht, versuch es gleich nochmal.",pt:"O servidor não responde, tente de novo em breve."},hist=[];
+Object.keys(L).forEach(function(k){Object.assign(L[k],{"it":{"v1":"VITTORIA!","v2":"SCONFITTA…","v3":"PAREGGIO","rm":"Rivincita","n":"Ehi, ti sei addormentato?"},"en":{"v1":"VICTORY!","v2":"DEFEAT…","v3":"DRAW","rm":"Rematch","n":"Hey, did you fall asleep?"},"es":{"v1":"¡VICTORIA!","v2":"DERROTA…","v3":"EMPATE","rm":"Revancha","n":"¿Te has dormido?"},"fr":{"v1":"VICTOIRE !","v2":"DÉFAITE…","v3":"ÉGALITÉ","rm":"Revanche","n":"Hé, tu t'es endormi ?"},"de":{"v1":"SIEG!","v2":"NIEDERLAGE…","v3":"UNENTSCHIEDEN","rm":"Revanche","n":"Hey, eingeschlafen?"},"pt":{"v1":"VITÓRIA!","v2":"DERROTA…","v3":"EMPATE","rm":"Revanche","n":"Ei, dormiu?"}}[k])});
+function T(k){return L[lang][k]}
+for(var i=0;i<7;i++){var r=document.createElementNS('http://www.w3.org/2000/svg','rect');r.setAttribute('x',79+i*6.4);r.setAttribute('width',3.6);r.setAttribute('rx',1.8);r.setAttribute('fill','#ff3d8b');vz.appendChild(r);bars.push(r)}
+function actx(){
+ if(!ctx){ctx=new(window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.5;master.connect(ctx.destination);
+  var n=ctx.sampleRate/2,b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);for(var i=0;i<n;i++)d[i]=Math.random()*2-1;noise=b}
+ if(ctx.state==='suspended')ctx.resume();
+}
+function kick(a){var o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(130,a);o.frequency.exponentialRampToValueAtTime(42,a+.16);g.gain.setValueAtTime(1,a);g.gain.exponentialRampToValueAtTime(.001,a+.32);o.connect(g);g.connect(master);o.start(a);o.stop(a+.34)}
+function nz(a,f,ty,du,v){var s=ctx.createBufferSource(),fl=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=noise;fl.type=ty;fl.frequency.value=f;g.gain.setValueAtTime(v,a);g.gain.exponentialRampToValueAtTime(.001,a+du);s.connect(fl);fl.connect(g);g.connect(master);s.start(a);s.stop(a+du+.02)}
