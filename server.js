@@ -81,11 +81,13 @@ function localReply(text, level, lang) {
 
 const app = express();
 app.use(express.json({ limit: '20kb' }));
-// la pagina è divisa in 3 parti, il server le unisce
-const PARTS = ['p1.html', 'p2.html', 'p3.html'];
+// la pagina è divisa in pezzi p1.html, p2.html, ... e il server li unisce
 app.get('/', (_req, res) => {
   try {
-    const html = PARTS.map(f => fs.readFileSync(path.join(__dirname, f), 'utf8')).join('');
+    const parts = fs.readdirSync(__dirname)
+      .filter(f => /^p\d+\.html$/.test(f))
+      .sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+    const html = parts.map(f => fs.readFileSync(path.join(__dirname, f), 'utf8')).join('');
     res.type('html').send(html);
   } catch (e) {
     console.error(e);
@@ -170,4 +172,4 @@ app.post('/api/rap', async (req, res) => {
 
 app.get('/health', (_req, res) => res.send('ok'));
 app.set('trust proxy', 1);
-app.listen(process.env.PORT || 3000, () => console.log('Freestyle Wall running'));
+app.listen(process.env.PORT || 3000, () => console.log('Barz running'));
